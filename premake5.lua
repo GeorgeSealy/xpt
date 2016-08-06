@@ -26,9 +26,13 @@ solution "xpt"
     else
         includedirs { ".", "./macOS", "/usr/local/include" }       -- for clang scan-build only. for some reason it needs this to work =p
     end
-    if not os.is "windows" then
-        targetdir "bin/"  
-    end
+
+    targetdir "bin/%{cfg.buildcfg}"
+    location "build"
+
+    -- if not os.is "windows" then
+    --     targetdir "bin/"  
+    -- end
     rtti "Off"
     flags { "ExtraWarnings", "StaticRuntime", "FloatFast", "EnableSSE2" }
     configuration "Debug"
@@ -90,11 +94,21 @@ else
 
     newaction
     {
-        trigger     = "solution",
+        trigger     = "vs",
         description = "Open xpt.sln",
         execute = function ()
             os.execute "premake5 vs2015"
             os.execute "start xpt.sln"
+        end
+    }
+
+    newaction
+    {
+        trigger     = "xc",
+        description = "Open xpt.xcproj",
+        execute = function ()
+            os.execute "premake5 xcode"
+            -- os.execute "start xpt.xcproj"
         end
     }
 
@@ -129,57 +143,57 @@ else
 
 end
 
-newaction
-{
-    trigger     = "clean",
+-- newaction
+-- {
+--     trigger     = "clean",
 
-    description = "Clean all build files and output",
+--     description = "Clean all build files and output",
 
-    execute = function ()
+--     execute = function ()
 
-        files_to_delete = 
-        {
-            "Makefile",
-            "*.make",
-            "*.txt",
-            "*.7z",
-            "*.zip",
-            "*.tar.gz",
-            "*.db",
-            "*.opendb",
-            "*.vcproj",
-            "*.vcxproj",
-            "*.vcxproj.user",
-            "*.sln"
-        }
+--         files_to_delete = 
+--         {
+--             "Makefile",
+--             "*.make",
+--             "*.txt",
+--             "*.7z",
+--             "*.zip",
+--             "*.tar.gz",
+--             "*.db",
+--             "*.opendb",
+--             "*.vcproj",
+--             "*.vcxproj",
+--             "*.vcxproj.user",
+--             "*.sln"
+--         }
 
-        directories_to_delete = 
-        {
-            "obj",
-            "ipch",
-            "bin",
-            ".vs",
-            "Debug",
-            "Release",
-            "release",
-            "cov-int",
-            "docker/libyojimbo"
-        }
+--         directories_to_delete = 
+--         {
+--             "obj",
+--             "ipch",
+--             "bin",
+--             ".vs",
+--             "Debug",
+--             "Release",
+--             "release",
+--             "cov-int",
+--             "docker/libyojimbo"
+--         }
 
-        for i,v in ipairs( directories_to_delete ) do
-          os.rmdir( v )
-        end
+--         for i,v in ipairs( directories_to_delete ) do
+--           os.rmdir( v )
+--         end
 
-        if not os.is "windows" then
-            os.execute "find . -name .DS_Store -delete"
-            for i,v in ipairs( files_to_delete ) do
-              os.execute( "rm -f " .. v )
-            end
-        else
-            for i,v in ipairs( files_to_delete ) do
-              os.execute( "del /F /Q  " .. v )
-            end
-        end
+--         if not os.is "windows" then
+--             os.execute "find . -name .DS_Store -delete"
+--             for i,v in ipairs( files_to_delete ) do
+--               os.execute( "rm -f " .. v )
+--             end
+--         else
+--             for i,v in ipairs( files_to_delete ) do
+--               os.execute( "del /F /Q  " .. v )
+--             end
+--         end
 
-    end
-}
+--     end
+-- }
