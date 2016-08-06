@@ -2,3 +2,5 @@ obj/
 xpt.VC.*
 xpt.sln
 xtp.vcxproj
+build
+bin

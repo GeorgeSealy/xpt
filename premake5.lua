@@ -51,6 +51,16 @@ if not os.is "windows" then
 
     -- MacOSX and Linux.
     
+    newaction
+    {
+        trigger     = "xc",
+        description = "Open xpt.xcworkspace",
+        execute = function ()
+            os.execute "premake5 xcode4"
+            os.execute "open build/xpt.xcworkspace"
+        end
+    }
+
     -- newaction
     -- {
     --     trigger     = "test",
@@ -102,15 +112,7 @@ else
         end
     }
 
-    newaction
-    {
-        trigger     = "xc",
-        description = "Open xpt.xcproj",
-        execute = function ()
-            os.execute "premake5 xcode"
-            -- os.execute "start xpt.xcproj"
-        end
-    }
+
 
 	-- newaction
 	-- {
