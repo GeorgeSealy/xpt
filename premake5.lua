@@ -3,7 +3,7 @@ xpt_version = "0.0.1-WiP"
 
 if os.is "windows" then
     -- debug_libs = { "sodium-debug", "mbedtls-debug", "mbedx509-debug", "mbedcrypto-debug" }
-    debug_libs = {  }
+    debug_libs = {  "SDL2", "SDL2-main" }
     release_libs = {  }
 else
     debug_libs = {  }
@@ -21,8 +21,8 @@ solution "xpt"
     platforms { "x64" }
     configurations { "Debug", "Release" }
     if os.is "windows" then
-        includedirs { ".", "./windows" }
-        libdirs { "./windows" }
+        includedirs { ".", "../windows/SDL2/include" }
+        libdirs { "../windows/SDL2/lib/x64" }
     else
         includedirs { ".", "./macOS", "/usr/local/include" }       -- for clang scan-build only. for some reason it needs this to work =p
     end
@@ -108,7 +108,7 @@ else
         description = "Open xpt.sln",
         execute = function ()
             os.execute "premake5 vs2015"
-            os.execute "start xpt.sln"
+            os.execute "start build/xpt.sln"
         end
     }
 
