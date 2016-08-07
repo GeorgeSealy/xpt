@@ -7,6 +7,9 @@
 
 #endif
 
+#include "vectorial/vectorial.h"
+using namespace vectorial;
+
 void killApp(const char *msg)
 {
     printf("SDL Error: %s: %s\n", msg, SDL_GetError());
@@ -121,6 +124,12 @@ void runMainLoop(SDL_Window *window) {
     
     // Basic run loop from http://gafferongames.com/game-physics/fix-your-timestep/
     // TODO: (George) Final interpolation between states for super smoothness
+    
+    float y = 3.0;
+    vec4f v = normalize( vec4f(1,2,3,4) + y );
+    float z = v.z();
+    
+    printf("Z = %1.2f\n", z);
     
     while (!inputs.shouldQuit)
     {

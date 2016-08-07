@@ -24,10 +24,10 @@ solution "xpt"
     configurations { "Debug", "Release" }
 
     if os.is "windows" then
-        includedirs { "..", "../windows" }
-        libdirs { "../windows" }
+        includedirs { "src", "windows" }
+        libdirs { "windows" }
     else
-        includedirs { ".", "./macos" }   
+        includedirs { "src", "./macos" }   
         libdirs { ".", "./macos" }  
         buildoptions {"-F ../macos"} -- added 
         linkoptions {"-F ../macos"} -- note the ../ here, as it's used verbatim in the build settings
