@@ -3,16 +3,18 @@ xpt_version = "0.0.1-WiP"
 
 if os.is "windows" then
     -- debug_libs = { "sodium-debug", "mbedtls-debug", "mbedx509-debug", "mbedcrypto-debug" }
-    debug_libs = {  "SDL2", "SDL2-main" }
+    debug_libs = {  }
     release_libs = {  }
 else
-    debug_libs = {  }
+    debug_libs = { "SDL2.framework", "OpenGL.framework" }
     release_libs = debug_libs
+    defines { "APPLE" }
 end
 
 language "C++"
 kind "ConsoleApp"
 configuration "Debug"
+    defines { "DEBUG" }
     links { debug_libs }
 configuration "Release"
     links { release_libs }
@@ -20,11 +22,15 @@ configuration "Release"
 solution "xpt"
     platforms { "x64" }
     configurations { "Debug", "Release" }
+
     if os.is "windows" then
-        includedirs { ".", "../windows/SDL2/include" }
-        libdirs { "../windows/SDL2/lib/x64" }
+        includedirs { "src", "windows" }
+        libdirs { "windows" }
     else
-        includedirs { ".", "./macOS", "/usr/local/include" }       -- for clang scan-build only. for some reason it needs this to work =p
+        includedirs { "src", "./macos" }   
+        libdirs { ".", "./macos" }  
+        buildoptions {"-F ../macos"} -- added 
+        linkoptions {"-F ../macos"} -- note the ../ here, as it's used verbatim in the build settings
     end
 
     targetdir "bin/%{cfg.buildcfg}"
@@ -44,10 +50,30 @@ solution "xpt"
         
 project "xtp"
     files { "src/*.h",  "src/*.cpp" }
+
+    if os.is "windows" then
+    else
+        links { "SDL2.framework" }
+    end
+
     -- links { "yojimbo" }
 
 
-if not os.is "windows" then
+if os.is "windows" then
+
+    -- Windows
+
+    newaction
+    {
+        trigger     = "vs",
+        description = "Open xpt.sln",
+        execute = function ()
+            os.execute "premake5 vs2015"
+            os.execute "start xpt.sln"
+        end
+    }
+
+else
 
     -- MacOSX and Linux.
     
@@ -97,20 +123,6 @@ if not os.is "windows" then
     --         os.execute( "echo" );
     --     end
     -- }
-
-else
-
-    -- Windows
-
-    newaction
-    {
-        trigger     = "vs",
-        description = "Open xpt.sln",
-        execute = function ()
-            os.execute "premake5 vs2015"
-            os.execute "start build/xpt.sln"
-        end
-    }
 
 
 
