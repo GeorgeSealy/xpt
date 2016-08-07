@@ -6,6 +6,11 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_opengl.h"
 
+#elif WINDOWS
+
+#include "SDL.h"
+#include "SDL_opengl.h"
+
 #endif
 
 #include "vectorial/vectorial.h"
@@ -63,7 +68,10 @@ InputState updateInputs(InputState &inputs) {
             case SDL_KEYUP:
                 /* Check the SDLKey values and move change the coords */
                 switch( event.key.keysym.sym ) {
-                    default:
+				case SDLK_ESCAPE:
+					inputs.shouldQuit = true;
+					break;
+				default:
                         break;
                 }
                 break;

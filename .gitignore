@@ -4,3 +4,4 @@ xpt.sln
 xtp.vcxproj
 build
 bin
+dist/

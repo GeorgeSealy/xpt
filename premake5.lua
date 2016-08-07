@@ -3,8 +3,9 @@ xpt_version = "0.0.1-WiP"
 
 if os.is "windows" then
     -- debug_libs = { "sodium-debug", "mbedtls-debug", "mbedx509-debug", "mbedcrypto-debug" }
-    debug_libs = {  }
-    release_libs = {  }
+    debug_libs = { "opengl32.lib", "SDL2", "SDL2main" }
+    release_libs = debug_libs
+    defines { "WINDOWS" }
 else
     debug_libs = { "SDL2.framework", "OpenGL.framework" }
     release_libs = debug_libs
@@ -24,8 +25,8 @@ solution "xpt"
     configurations { "Debug", "Release" }
 
     if os.is "windows" then
-        includedirs { "src", "windows" }
-        libdirs { "windows" }
+        includedirs { "src", "windows", "windows/SDL2/include" }
+        libdirs { "windows", "windows/SDL2/lib/x64" }
     else
         includedirs { "src", "./macos" }   
         libdirs { ".", "./macos" }  
@@ -33,7 +34,9 @@ solution "xpt"
         linkoptions {"-F ../macos"} -- note the ../ here, as it's used verbatim in the build settings
     end
 
-    targetdir "bin/%{cfg.buildcfg}"
+    targetdir "dist/%{cfg.buildcfg}"
+    debugdir "dist/%{cfg.buildcfg}"
+    objdir "build/obj/%{cfg.buildcfg}"
     location "build"
 
     -- if not os.is "windows" then
@@ -48,13 +51,13 @@ solution "xpt"
         optimize "Speed"
         defines { "NDEBUG" }
         
-project "xtp"
+project "xpt"
     files { "src/*.h",  "src/*.cpp" }
 
-    if os.is "windows" then
-    else
-        links { "SDL2.framework" }
-    end
+    -- if os.is "windows" then
+    -- else
+    --     links { "SDL2.framework" }
+    -- end
 
     -- links { "yojimbo" }
 
@@ -69,7 +72,15 @@ if os.is "windows" then
         description = "Open xpt.sln",
         execute = function ()
             os.execute "premake5 vs2015"
-            os.execute "start xpt.sln"
+            os.execute "start build/xpt.sln"
+            os.mkdir("dist")
+            os.mkdir("dist/Debug")
+            os.mkdir("dist/Release")
+
+            os.copyfile("windows/SDL2/lib/x64/SDL2.dll", "dist/Debug/SDL2.dll")
+            os.copyfile("windows/SDL2/lib/x64/SDL2.dll", "dist/Release/SDL2.dll")
+            os.execute("robocopy assets dist/Debug/assets /E")
+            os.execute("robocopy assets dist/Release/assets /E")
         end
     }
 
