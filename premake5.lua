@@ -3,7 +3,7 @@ xpt_version = "0.0.1-WiP"
 
 if os.is "windows" then
     -- debug_libs = { "sodium-debug", "mbedtls-debug", "mbedx509-debug", "mbedcrypto-debug" }
-    debug_libs = { "opengl32.lib", "SDL2", "SDL2main" }
+    debug_libs = { "opengl32.lib", "SDL2", "SDL2main", "glew32s" }
     release_libs = debug_libs
     defines { "WINDOWS" }
 else
@@ -25,10 +25,10 @@ solution "xpt"
     configurations { "Debug", "Release" }
 
     if os.is "windows" then
-        includedirs { "src", "windows", "windows/SDL2/include" }
-        libdirs { "windows", "windows/SDL2/lib/x64" }
+        includedirs { ".", "src", "windows", "windows/SDL2/include", "windows/glew/include/GL" }
+        libdirs { "windows", "windows/SDL2/lib/x64", "windows/glew/lib/Release/x64" }
     else
-        includedirs { "src", "./macos" }   
+        includedirs { ".", "src", "./macos" }   
         libdirs { ".", "./macos" }  
         buildoptions {"-F ../macos"} -- added 
         linkoptions {"-F ../macos"} -- note the ../ here, as it's used verbatim in the build settings
@@ -52,8 +52,15 @@ solution "xpt"
         defines { "NDEBUG" }
         
 project "xpt"
-    files { "src/*.h",  "src/*.cpp" }
+    files { "xpt.h", "xpt.cpp", "src/*.h",  "src/*.cpp" }
 
+    pchheader "xpt.h"
+
+    if os.is "windows" then
+        files { "windows/*.h",  "windows/*.cpp" }
+        pchsource "xpt.cpp"
+    else
+    end
     -- if os.is "windows" then
     -- else
     --     links { "SDL2.framework" }
