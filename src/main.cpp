@@ -261,9 +261,9 @@ void setupGL() {
     atmosphere.meshes[5] = buildAtmosphereMesh(numSquaresPerSide, vec3f(-1.0, -1.0, -1.0), vec3f(2.0, 0.0, 0.0), vec3f(0.0, 2.0, 0.0));
 
 
-    vertexShader = compileShader("Assets/Shaders/SimpleCameraVertex.glsl", ShaderTypeVertex);
+    vertexShader = compileShader("assets/shaders/SimpleCameraVertex.glsl", ShaderTypeVertex);
 //    geometryShader = compileShader("Assets/Shaders/SimpleCameraGeometry.glsl", ShaderTypeGeometry);
-    fragmentShader = compileShader("Assets/Shaders/SimpleCameraFragment.glsl", ShaderTypeFragment);
+    fragmentShader = compileShader("assets/shaders/SimpleCameraFragment.glsl", ShaderTypeFragment);
     
     printf("Shaders: %u, %u, %u\n", vertexShader, geometryShader, fragmentShader);
     

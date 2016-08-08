@@ -9,12 +9,12 @@
 /* Ensure we are using opengl's core profile only */
 #define GL3_PROTOTYPES 1
 
-#include "SDL.h"
-
 #if APPLE
 
 #include "SDL2/SDL.h"
-#include "SDL2/SDL_opengl.h"
+// #include "SDL2/SDL_opengl.h"
+#include <OpenGL/OpenGL.h>
+#include <OpenGL/gl3.h>
 
 #elif WINDOWS
 

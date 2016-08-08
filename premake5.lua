@@ -34,8 +34,6 @@ solution "xpt"
         linkoptions {"-F ../macos"} -- note the ../ here, as it's used verbatim in the build settings
     end
 
-    targetdir "dist/%{cfg.buildcfg}"
-    debugdir "dist/%{cfg.buildcfg}"
     objdir "build/obj/%{cfg.buildcfg}"
     location "build"
 
@@ -54,12 +52,19 @@ solution "xpt"
 project "xpt"
     files { "xpt.h", "xpt.cpp", "src/*.h",  "src/*.cpp" }
 
-    pchheader "xpt.h"
 
     if os.is "windows" then
         files { "windows/*.h",  "windows/*.cpp" }
+        pchheader "xpt.h"
         pchsource "xpt.cpp"
+        targetdir "dist/%{cfg.buildcfg}"
+        debugdir "dist/%{cfg.buildcfg}"
     else
+        files { "macos/*.h",  "macos/*.cpp" }
+        files { "assets/**" }
+        pchheader "../xpt.h"
+        targetdir "."
+        debugdir "."
     end
     -- if os.is "windows" then
     -- else
